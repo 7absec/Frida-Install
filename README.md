@@ -7,12 +7,12 @@ PowerShell automation script for installing Frida on Windows and pushing Frida s
 ## ⚙️ Features
 
 - Auto-detects architecture and downloads appropriate Frida server
-- Allows install, update, or specific version selection
+- Allows install, update, or specific version selection for both client and server
 - Handles previously installed versions
 - Extracts `.xz` files using 7-Zip
 - Pushes `frida-server` to `/data/local/tmp/` on the Android device
 - Makes server executable and launches it via `adb shell`
-- Offers modular, well-commented code structure
+- Modular, well-commented code structure
 
 ---
 
@@ -20,7 +20,7 @@ PowerShell automation script for installing Frida on Windows and pushing Frida s
 
 ### 1. Clone the Repo
 ```powershell
-git clone https://github.com/yourname/Frida-Installer.git
+git clone https://github.com/7absec/Frida-Installer.git
 cd Frida-Installer
 ```
 
@@ -30,13 +30,11 @@ cd Frida-Installer
 ```
 
 Choose from the menu:
-
 ```
 [1] Install Frida
 [2] Update Frida to latest
 [3] Install specific version
 ```
-
 You will be prompted to:
 - Select Frida **client** version
 - Select Frida **server** version
@@ -45,7 +43,7 @@ It downloads, renames (with version), pushes and starts the server.
 
 ---
 
-## 📥 Requirements
+## 🗕️ Requirements
 
 - PowerShell (Windows)
 - ADB (Android Debug Bridge) in PATH
@@ -63,14 +61,12 @@ Ensure USB debugging is enabled on your Android device and it's connected.
 
 ---
 
-## 🔁 Restarting Frida Server (Portfrida.bat)
+## 🔀 Restarting Frida Server (Portfrida.bat)
 
 Use this helper script if the server crashes or port is stuck:
-
 ```bat
 .\CustomFScripts\Portfrida.bat
 ```
-
 It will:
 - Check if port 27042 is in use
 - Kill the process if necessary
@@ -82,7 +78,7 @@ It will:
 
 To capture and inspect HTTPS traffic from the Android device using [Burp Suite](https://portswigger.net/burp), you need to install its **CA certificate** into the Android system certificate store.
 
-This step requires root access on the Android device.
+> ⚠️ This step requires root access on the Android device.
 
 ---
 
@@ -94,7 +90,6 @@ This step requires root access on the Android device.
 2. Converts it to Android-compatible format (`.0` hashed name)
 3. Pushes it to `/system/etc/security/cacerts/` using `adb root` and `remount`
 4. Sets correct permissions (`644`)
-5. Reboots device (or prompts you to do so)
 
 ---
 
@@ -104,18 +99,15 @@ This step requires root access on the Android device.
    - Burp > Proxy > Options > *Import / Export CA Cert* > Export as DER
 
 2. Run the Python script:
-
 ```bash
 python Pushcrt.py -i cacert.der
 ```
-
 - `-i`: Path to the input DER certificate
 
 3. The script will:
    - Convert it using `openssl`
    - Compute certificate hash
    - Push and set permissions
-   - Suggest a reboot if required
 
 ---
 
@@ -128,13 +120,12 @@ python Pushcrt.py -i cacert.der
 
 ---
 
-### 📎 Example Output
-
-```
+### 📌 Example Output
+```bash
 [*] Certificate hash: 9a5ba575.0
 [*] Pushing cert to /system/etc/security/cacerts/...
 [*] Setting permissions...
-[✓] Done. Reboot your device to apply the changes.
+[✓] Done. Certificate pushed successfully.
 ```
 
 ---
@@ -149,7 +140,6 @@ python Pushcrt.py -i cacert.der
 ### 📁 Bonus: Combine with Frida
 
 You can chain this with `Frida_install.ps1` in a single automation pipeline:
-
 ```bash
 .\Frida_install.ps1
 python Pushcrt.py -i cacert.der
@@ -159,9 +149,3 @@ python Pushcrt.py -i cacert.der
 
 ## 📜 License
 MIT
-
----
-
-## 👨‍💻 Credits
-- @yourusername (Frida automation)
-- Community contributors
